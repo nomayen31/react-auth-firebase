@@ -1,15 +1,21 @@
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import './Login.css'
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import app from "../../Hook/firebaseConfig";
+import ResetPassword from "../ResetPassword/ResetPassword";
 
 const Login = ({user, setUser}) => {
+
+  const navigate =useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const [modalShow, setModalShow] =useState(false);
+
   const auth=getAuth(app)
 
   const handleEmail = (e)=>{
@@ -26,6 +32,8 @@ const Login = ({user, setUser}) => {
     console.log(user);
 
     Swal.fire("Good job!", "You clicked the button!", "success")
+    navigate('/home')
+    
 
     // ...
   })
@@ -66,12 +74,15 @@ const Login = ({user, setUser}) => {
                   are you new? please register
                 </small>
               </Link>
-              <span role="button" className="ms-4 text-primary cursor-pointer">
+              <span
+              onClick={() => setModalShow(true)}
+              role="button" className="ms-4 text-primary cursor-pointer">
                 Forget Password?
               </span>
             </p>
             <input className="p-2" type="checkbox" />{" "}
             <span className="mb-3 ">remember me </span>
+            
             <br />
             <button
             onClick={handleLogin}
@@ -88,6 +99,12 @@ const Login = ({user, setUser}) => {
             <p className="fw-bold">Google SignIn</p>
           </button>
         </div>
+        
+
+        <ResetPassword
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+        />
       </div>
     </div>
   );
