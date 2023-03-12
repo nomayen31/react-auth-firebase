@@ -28,8 +28,9 @@ const Login = ({user, setUser}) => {
     signInWithEmailAndPassword(auth, email, password)
   .then((userCredential) => {
     // Signed in 
-    const user = userCredential.user;
-    console.log(user);
+    const userInfo = userCredential.user;
+    setUser(userInfo)
+    
 
     Swal.fire("Good job!", "You clicked the button!", "success")
     navigate('/home')
