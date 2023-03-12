@@ -1,4 +1,4 @@
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
@@ -9,6 +9,7 @@ import app from "../../Hook/firebaseConfig";
         const [email, setEmail] = useState("");
         const [password, setPassword] = useState("");
         const [error, setError] = useState("");
+        const [isDesabled, setIsDesabled] =useState(true);
         const auth = getAuth(app);
 
         const handleName =(e) =>{
@@ -50,8 +51,11 @@ import app from "../../Hook/firebaseConfig";
                 .then((userCredential) => {
                   // Signed in 
                   const user = userCredential.user;
+                  updateName()
+                  verifyEmail()
                   console.log(user);
                   setError("")
+                  Swal.fire("Good job!", "You clicked the button!", "success")
                   // ...
                 })
                 .catch((error) => {
@@ -64,8 +68,27 @@ import app from "../../Hook/firebaseConfig";
             else{
                 setError("please fil out all the input")
             }
-          }
+          };
 
+        const updateName = () =>{
+            updateProfile(auth.currentUser, {
+                displayName:name,
+              }).then(() => {
+                // Profile updated!
+                // ...
+              }).catch((error) => {
+                // An error occurred
+                // ...
+              });
+        };
+
+        const verifyEmail = () =>{
+            sendEmailVerification(auth.currentUser)
+  .then(() => {
+    // Email verification sent!
+    // ...
+  });
+        }
 
     
     return (
@@ -110,13 +133,16 @@ import app from "../../Hook/firebaseConfig";
                                     </small>
                                 </Link>
                             </p>
-                            <input className="p-2" type="checkbox" />{" "}
+                            <input
+                            onClick={()=>setIsDesabled(!isDesabled)}
+                            className="p-2" type="checkbox" />{" "}
                             <span className="mb-3">accept term & condition</span>
                             <br />
                             <button
                             onClick={handleRegister}
                                 type="submit"
                                 className="btn btn-info p-3 w-50 mt-3 fw-bold text-white"
+                                disabled={isDesabled}
                             >
                                 Register
                             </button>
