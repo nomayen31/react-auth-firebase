@@ -2,10 +2,12 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useState } from "react";
 import app from "./firebaseConfig";
 
+
 const useFirebase = () => {
-  const auth = getAuth(app);
+  const auth = getAuth(app)
   const provider = new GoogleAuthProvider();
-  const [userInfo, setUserInfo] = useState("");
+  const [userInfo, setUserInfo] =useState("")
+
 
   const handleGoogleLogin = () => {
     signInWithPopup(auth, provider)
@@ -15,7 +17,8 @@ const useFirebase = () => {
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        setUserInfo(user);
+        setUserInfo(user)
+        
         // ...
       })
       .catch((error) => {
@@ -34,7 +37,7 @@ const useFirebase = () => {
     console.log("ia m test 2");
   };
 
-  return { handleGoogleLogin, test2, userInfo };
+  return { handleGoogleLogin, test2 ,userInfo};
 };
 
 export default useFirebase;

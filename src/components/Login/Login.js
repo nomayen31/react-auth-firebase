@@ -5,6 +5,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import app from "../../Hook/firebaseConfig";
 import ResetPassword from "../ResetPassword/ResetPassword";
+import useFirebase from "../../Hook/useFirebase";
 
 const Login = ({user, setUser}) => {
 
@@ -17,6 +18,9 @@ const Login = ({user, setUser}) => {
   const [modalShow, setModalShow] =useState(false);
 
   const auth=getAuth(app)
+
+  
+const {handleGoogleLogin, test2}=useFirebase("");
 
   const handleEmail = (e)=>{
     setEmail(e.target.value)
@@ -91,7 +95,9 @@ const Login = ({user, setUser}) => {
               Login
             </button>
           </div>
-          <button className="btn mt-3 border d-flex align-items-center justify-content-evenly p-2 m-auto">
+          <button 
+          onClick={handleGoogleLogin}
+          className="btn mt-3 border d-flex align-items-center justify-content-evenly p-2 m-auto">
             <img
               className="w-25 image-fluid btn-image"
               src="https://img.icons8.com/color/344/google-logo.png"

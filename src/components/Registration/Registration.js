@@ -1,8 +1,9 @@
-import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, updateProfile, sendEmailVerification, onAuthStateChanged } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import app from "../../Hook/firebaseConfig";
+import useFirebase from "../../Hook/useFirebase";
 
     const Registration = ({ user, setUser }) => {
         const [name, setName] = useState("");
@@ -11,6 +12,8 @@ import app from "../../Hook/firebaseConfig";
         const [error, setError] = useState("");
         const [isDesabled, setIsDesabled] =useState(true);
         const auth = getAuth(app);
+
+        const {handleGoogleLogin, test2}=useFirebase("");
 
         const handleName =(e) =>{
             setName(e.target.value);
@@ -89,7 +92,21 @@ import app from "../../Hook/firebaseConfig";
     // Email verification sent!
     // ...
   });
-        }
+  }
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        setUser(user);
+        // ...
+      } else {
+        // User is signed out
+        // ...
+      }
+    });
+  }, []);
 
     
     return (
@@ -149,7 +166,9 @@ import app from "../../Hook/firebaseConfig";
                             </button>
                         </form>
                     </div>
-                    <button className="btn mt-3 border d-flex align-items-center justify-content-evenly p-2 m-auto">
+                    <button
+                    onClick={handleGoogleLogin}
+                    className="btn mt-3 border d-flex align-items-center justify-content-evenly p-2 m-auto">
                         <img
                             className="w-25 image-fluid btn-image"
                             src="https://img.icons8.com/color/344/google-logo.png"
